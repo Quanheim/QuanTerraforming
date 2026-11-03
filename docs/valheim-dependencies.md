@@ -20,10 +20,11 @@ What the mod patches. A changed signature stops the patch applying; changed logi
 
 | Game code | Patch | What it does | If the game changes it |
 |---|---|---|---|
-| `TerrainComp.LevelTerrain` | Transpiler | Replaces the `-8f`/`8f` clamp on the stored height change with the Max dig/Max raise settings. | Constants moved or changed: logs an error and that limit stays at vanilla. |
+| `TerrainComp.LevelTerrain` | Transpiler | Replaces the `-8f`/`8f` clamp on the stored height change with the Lower/Upper limit settings. | Constants moved or changed: logs an error and that limit stays at vanilla. |
 | `TerrainComp.RaiseTerrain` | Transpiler | As above. | As above. |
-| `TerrainComp.ApplyToHeightmap` | Transpiler | Replaces the two `8f` in `Clamp(h, base - 8, base + 8)`: first with Max dig, second with Max raise. | Order of the two constants changes: dig and raise swap. Constants gone: logs an error. |
+| `TerrainComp.ApplyToHeightmap` | Transpiler | Replaces the two `8f` in `Clamp(h, base - 8, base + 8)`: first with the lower limit, second with the upper limit. | Order of the two constants changes: dig and raise swap. Constants gone: logs an error. |
 | `Heightmap.UpdateCornerDepths` | Postfix | Makes the zone's sea re-read its corner depths, so waves follow terrain edits. | Renamed or no longer called on full regenerate: waves go back to the world-generated seabed. |
+| `Humanoid.StartAttack` | Prefix | Returns false while the Terraforming Wand is the current weapon, so it doesn't swing. | Renamed: the wand swings like the hammer. |
 
 ### Private members reached by reflection
 
@@ -55,9 +56,12 @@ a change in behaviour isn't, so list the ones whose behaviour the mod depends on
 | `WaterVolume.m_heightmap` | Matches a sea to its zone's heightmap. |
 | `WaterVolume.m_waterSurface` | Skips a sea without a surface renderer before calling `SetupMaterial`. |
 | `Player.m_localPlayer` | Where to centre the grid. |
-| `Chat.HasFocus` | Ignores the toggle key while typing in chat. |
-| `Console.IsVisible` | Ignores the toggle key while the console is open. |
-| `TextInput.IsVisible` | Ignores the toggle key while a text box (sign, tame name) is open. |
+| `Humanoid.GetCurrentWeapon` | Whether the player is holding the wand (grid on, no swing). |
+| `ItemDrop.ItemData.SharedData.m_buildPieces` | Cleared on the wand, so it isn't a build tool. |
+| `ItemDrop.ItemData.SharedData.m_useDurability` | Off for the wand. |
+| `ItemDrop.ItemData.SharedData.m_canBeReparied` | Off for the wand. |
+| `ItemDrop.ItemData.SharedData.m_weight` | The wand weighs 0.5. |
+| `ItemDrop.ItemData.SharedData.m_name` | Recognises the wand by its name token. |
 
 ### Behaviour the mod assumes
 
@@ -74,10 +78,11 @@ Things the game does that the mod counts on without calling them, e.g. "only the
 | `WaterVolume.CalcWave` | Wave height scales linearly with that blended depth (0 = flat). |
 | `ZoneSystem.m_zoneSize` | Zones are 64 m, centred on multiples of 64 (hard-coded in the overlay). |
 | `ZoneSystem.m_waterLevel` | Sea level is 30 m (hard-coded in the overlay). |
+| `VisEquipment` | Shows a held item by copying its prefab's `attach` child into the hand, so replacing the mesh under `attach` changes what's held. |
 
-### Planned (wand tools, see docs/design.md)
+### Planned (shaping tools, see docs/design.md)
 
-*Planned*, not in the code yet. These move into the tables above, as built, when the wand lands. Kept out of the
+*Planned*, not in the code yet. These move into the tables above, as built, when the tools land. Kept out of the
 tables so `check-mods.ps1` only checks what the mod really uses.
 
 - *planned* `TerrainComp` private `m_levelDelta`, `m_smoothDelta`, `m_modifiedHeight`, `Save`, `m_nview`: writing
@@ -86,7 +91,7 @@ tables so `check-mods.ps1` only checks what the mod really uses.
   `Heightmap.GetHeight(int, int)`, `Heightmap.WorldToVertex`, `Heightmap.Poke`: finding and refreshing each zone.
 - *planned* `ClutterSystem.ResetGrass`: regrowing grass on the new surface.
 - *planned* A postfix on `TerrainComp.Awake` to register the wand's RPC on each terrain record.
-- *planned* Prefab `Hoe` (cloned for the wand's model) and `Stone` (recipe).
+- *planned* `ItemDrop.ItemData.SharedData.m_buildPieces` set to the wand's own piece table (in place of null).
 
 ## Prefabs and assets
 
@@ -97,3 +102,9 @@ after each update.
 | Prefab or asset | Used for | Breaks if |
 |---|---|---|
 | Shader `Sprites/Default` (falls back to `Hidden/Internal-Colored`, then `UI/Default`) | Line material for borders and posts. | Lines are invisible or pink: the build no longer includes these shaders. |
+| Prefab `Hammer` | Cloned for the wand (hand position, animations, sounds). | Renamed: no wand. |
+| `Hammer/attach/hammer` (MeshFilter + MeshRenderer, mesh `hammer_Cube.006`, rotated 90° on X, scale 0.3) | Its mesh is swapped for the wand's; the wand is built in that mesh's space (+Y from -0.342 to 1.228). | Moved or renamed: logs an error and the wand looks like a hammer. Re-oriented or rescaled: the wand sits wrong in the hand. |
+| `Hammer/collider` (BoxCollider) | Refitted to the wand for the dropped item. | Missing: the dropped wand keeps the hammer's collider (cosmetic). |
+| Material `weapons1` (on the hammer), atlas patch u 0.807–0.834, v 0.627–0.734 | The wand's grip and collar. | Atlas rearranged: the grip shows the wrong texture. |
+| Material `DarkWood_mat` (darkwood beams/roof), left half of `DarkWoodBeams_d` | The wand's body. | Renamed: logs a warning and the body uses the grip's wood. |
+| Prefab `Wood` | Recipe: 2 Wood. | Renamed: no recipe. |

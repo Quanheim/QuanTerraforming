@@ -19,9 +19,12 @@ namespace QuanTerraforming
 
         private static bool Prepare() => !OtherModHandlesLimits;
 
-        public static float MaxRaise() => Plugin.MaxRaise.Value;
-        public static float MaxDigNegative() => -Plugin.MaxDig.Value;
-        public static float MaxDig() => Plugin.MaxDig.Value;
+        private const float Vanilla = 8f;
+
+        // Read every time the game clamps, so a synced change applies straight away. Mod switched off: vanilla.
+        public static float MaxRaise() => Plugin.Enabled.Value ? Plugin.UpperLimit.Value : Vanilla;
+        public static float MaxDigNegative() => -MaxDig();
+        public static float MaxDig() => Plugin.Enabled.Value ? Plugin.LowerLimit.Value : Vanilla;
 
         // Stored height change: Mathf.Clamp(delta, -8f, 8f).
         [HarmonyTranspiler]

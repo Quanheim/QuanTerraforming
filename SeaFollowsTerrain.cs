@@ -23,7 +23,7 @@ namespace QuanTerraforming
 
         private static void Postfix(Heightmap __instance)
         {
-            if (!Plugin.SeaFollowsTerrain.Value) return;
+            if (!Plugin.Enabled.Value || !Plugin.SeaFollowsTerrain.Value) return;
 
             foreach (WaterVolume water in WaterVolume.Instances)
             {

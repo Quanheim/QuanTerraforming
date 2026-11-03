@@ -11,6 +11,7 @@ namespace QuanTerraforming
     // height at each corner vertex, worked out in Heightmap.UpdateCornerDepths and read here through
     // Heightmap.GetOceanDepth(), so the colours show exactly what the waves will use.
     // Green = at or above sea level (no waves), yellow to red = deeper, red = 10 m or more (full waves).
+    // Shown only while the local player holds the Terraforming Wand.
     internal class ZoneGridOverlay : MonoBehaviour
     {
         private const float ZoneSize = 64f;          // ZoneSystem.m_zoneSize
@@ -18,8 +19,6 @@ namespace QuanTerraforming
         private const float FullWaveDepth = 10f;     // WaterVolume normalises depth / 10
         private const float SampleStep = 2f;
         private const float RefreshSeconds = 1f;
-
-        public bool Visible { get; set; }
 
         private float _nextRefresh;
         private Material _material;
@@ -46,24 +45,16 @@ namespace QuanTerraforming
 
         private void Update()
         {
-            if (Plugin.ToggleKey.Value.IsDown() && !TypingInUi())
+            bool show = Plugin.Enabled.Value && Wand.TerraformingWand.HeldByLocalPlayer();
+            if (_root.gameObject.activeSelf != show)
             {
-                Visible = !Visible;
-                _nextRefresh = 0f;
+                _root.gameObject.SetActive(show);
+                _nextRefresh = 0f;   // draw straight away when the wand comes out
             }
-
-            Player player = Player.m_localPlayer;
-            bool show = Visible && player != null;
-            if (_root.gameObject.activeSelf != show) _root.gameObject.SetActive(show);
             if (!show || Time.time < _nextRefresh) return;
 
             _nextRefresh = Time.time + RefreshSeconds;
-            Rebuild(player.transform.position);
-        }
-
-        private static bool TypingInUi()
-        {
-            return (Chat.instance != null && Chat.instance.HasFocus()) || Console.IsVisible() || TextInput.IsVisible();
+            Rebuild(Player.m_localPlayer.transform.position);
         }
 
         private static long Key(float x, float z) => ((long)Mathf.RoundToInt(x) << 32) ^ (uint)Mathf.RoundToInt(z);
@@ -121,7 +112,7 @@ namespace QuanTerraforming
             float cx = zx * ZoneSize, cz = zz * ZoneSize, h = ZoneSize / 2f;
             float[] sea = SeaDepths(new Vector3(cx, 0f, cz));
             // Corner order matches Heightmap.UpdateCornerDepths and WaterVolume.m_normalizedDepth.
-            _hud = $"Zone ({zx}, {zz})   {Plugin.ToggleKey.Value} hides\n" +
+            _hud = $"Zone ({zx}, {zz})\n" +
                    $"NW  ground {Describe(cx - h, cz + h)}  ·  sea waves {SeaText(sea, 0)}\n" +
                    $"NE  ground {Describe(cx + h, cz + h)}  ·  sea waves {SeaText(sea, 1)}\n" +
                    $"SE  ground {Describe(cx + h, cz - h)}  ·  sea waves {SeaText(sea, 2)}\n" +
@@ -217,7 +208,7 @@ namespace QuanTerraforming
 
         private void OnGUI()
         {
-            if (!Visible || Player.m_localPlayer == null || _hud.Length == 0) return;
+            if (!_root.gameObject.activeSelf || Player.m_localPlayer == null || _hud.Length == 0) return;
             if (_hudStyle == null)
                 _hudStyle = new GUIStyle(GUI.skin.box) { fontSize = 16, alignment = TextAnchor.UpperLeft, wordWrap = false };
             GUI.Box(new Rect(20f, Screen.height * 0.35f, 720f, 150f), _hud, _hudStyle);

@@ -11,3 +11,8 @@ Local.props
 .vs/
 .vscode/
 *.user
+
+# tools/ scripts write the game's own textures and meshes next to themselves: Iron Gate's assets, never committed
+tools/*.png
+tools/*.obj
+tools/.venv/

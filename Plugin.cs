@@ -2,7 +2,6 @@ using BepInEx;
 using BepInEx.Configuration;
 using HarmonyLib;
 using Jotunn.Utils;
-using UnityEngine;
 
 namespace QuanTerraforming
 {
@@ -19,52 +18,53 @@ namespace QuanTerraforming
         public const string PluginName = "QuanTerraforming";
         public const string PluginVersion = PluginInfo.Version; // generated from <Version> in the .csproj
 
+        internal static ConfigEntry<bool> Enabled;
+        internal static ConfigEntry<float> UpperLimit;
+        internal static ConfigEntry<float> LowerLimit;
         internal static ConfigEntry<bool> SeaFollowsTerrain;
-        internal static ConfigEntry<float> MaxRaise;
-        internal static ConfigEntry<float> MaxDig;
-        internal static ConfigEntry<bool> ShowOnStart;
-        internal static ConfigEntry<KeyboardShortcut> ToggleKey;
         internal static ConfigEntry<int> Radius;
+
+        private static ConfigDescription AdminOnly(string text, AcceptableValueBase range = null) =>
+            new ConfigDescription(text + " Synced from the server; admins only.", range,
+                new ConfigurationManagerAttributes { IsAdminOnly = true });
 
         private void Awake()
         {
-            const string sea = "1 - Sea";
-            SeaFollowsTerrain = Config.Bind(sea, "Waves follow terrain edits", true,
-                new ConfigDescription(
-                    "Raising or lowering terrain changes how big the sea's waves are there, as the ground's height " +
-                    "already suggests. Off is vanilla: waves keep the seabed as the world was generated, whatever " +
-                    "you build. Applies as zones load or are edited. Synced from the server; admins only.",
-                    null, new ConfigurationManagerAttributes { IsAdminOnly = true }));
+            const string general = "0 - General";
+            Enabled = Config.Bind(general, "Enabled", true, AdminOnly(
+                "Untick to switch the whole mod off and go back to vanilla: waves keep the original seabed, the " +
+                "terrain limit returns to 8 m and the wand shows nothing. Careful: land raised or dug more than 8 m " +
+                "then shows cut back to 8 m, and any terrain edit there saves the cut."));
 
-            const string limits = "2 - Terrain limits";
-            MaxRaise = Config.Bind(limits, "Max raise", 200f,
-                new ConfigDescription(
-                    "How far terrain can be raised above the ground as the world generated it, in metres. Vanilla " +
-                    "is 8. Lowering this below existing edits shows them cut down, and the next edit there saves " +
-                    "the cut. Synced from the server; admins only.",
-                    new AcceptableValueRange<float>(1f, 200f), new ConfigurationManagerAttributes { IsAdminOnly = true }));
-            MaxDig = Config.Bind(limits, "Max dig", 200f,
-                new ConfigDescription(
-                    "How far terrain can be dug below the ground as the world generated it, in metres. Vanilla is 8. " +
-                    "Same caution as Max raise. Synced from the server; admins only.",
-                    new AcceptableValueRange<float>(1f, 200f), new ConfigurationManagerAttributes { IsAdminOnly = true }));
+            const string heightmap = "1 - Heightmap";
+            UpperLimit = Config.Bind(heightmap, "Upper limit", 200f, AdminOnly(
+                "How far terrain can be raised above the ground as the world generated it, in metres. Vanilla is 8. " +
+                "Lowering this below existing edits shows them cut down, and the next edit there saves the cut.",
+                new AcceptableValueRange<float>(1f, 200f)));
+            LowerLimit = Config.Bind(heightmap, "Lower limit", 200f, AdminOnly(
+                "How far terrain can be dug below the ground as the world generated it, in metres. Vanilla is 8. " +
+                "Same caution as the upper limit.",
+                new AcceptableValueRange<float>(1f, 200f)));
 
-            const string overlay = "3 - Zone grid (personal)";
-            ShowOnStart = Config.Bind(overlay, "Show on start", false,
-                "Show the zone grid as soon as you enter a world. Otherwise press the toggle key. Personal.");
-            ToggleKey = Config.Bind(overlay, "Toggle key", new KeyboardShortcut(KeyCode.G, KeyCode.LeftAlt),
-                "Shows or hides the zone grid. Not F7: Magic Mike's Mod Settings opens on that. Personal.");
-            Radius = Config.Bind(overlay, "Radius", 3,
-                new ConfigDescription("How many zones to draw on each side of the one you're standing in. Personal.",
-                    new AcceptableValueRange<int>(1, 8)));
+            const string sea = "2 - Sea";
+            SeaFollowsTerrain = Config.Bind(sea, "Waves follow terrain edits", true, AdminOnly(
+                "Raising or lowering terrain changes how big the sea's waves are there, as the ground's height " +
+                "suggests. Off is vanilla: waves keep the seabed as the world was generated, whatever you build. " +
+                "Applies as zones load or are edited."));
+
+            const string grid = "3 - Zone grid (personal)";
+            Radius = Config.Bind(grid, "Radius", 3, new ConfigDescription(
+                "While you hold the Terraforming Wand, how many zones of grid to draw on each side of the one you're " +
+                "standing in. Personal.",
+                new AcceptableValueRange<int>(1, 8)));
 
             new Harmony(PluginGuid).PatchAll(typeof(Plugin).Assembly);
             if (TerrainLimits.OtherModHandlesLimits)
                 Logger.LogWarning("Heightmap Unlimited JvL is installed, so it sets the terrain limits and this mod's " +
-                                  "\"2 - Terrain limits\" settings do nothing. Remove it once this mod is on every client.");
+                                  "\"1 - Heightmap\" settings do nothing. Remove it once this mod is on every client.");
 
-            var grid = gameObject.AddComponent<ZoneGridOverlay>();
-            grid.Visible = ShowOnStart.Value;
+            Wand.TerraformingWand.Register();
+            gameObject.AddComponent<ZoneGridOverlay>();
 
             Logger.LogInfo($"{PluginName} {PluginVersion} loaded.");
         }
