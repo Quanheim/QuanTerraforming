@@ -75,6 +75,19 @@ Things the game does that the mod counts on without calling them, e.g. "only the
 | `ZoneSystem.m_zoneSize` | Zones are 64 m, centred on multiples of 64 (hard-coded in the overlay). |
 | `ZoneSystem.m_waterLevel` | Sea level is 30 m (hard-coded in the overlay). |
 
+### Planned (wand tools, see docs/design.md)
+
+*Planned*, not in the code yet. These move into the tables above, as built, when the wand lands. Kept out of the
+tables so `check-mods.ps1` only checks what the mod really uses.
+
+- *planned* `TerrainComp` private `m_levelDelta`, `m_smoothDelta`, `m_modifiedHeight`, `Save`, `m_nview`: writing
+  per-point heights on the owner, as `LevelTerrain` and `DoOperation` do.
+- *planned* `Heightmap.GetAndCreateTerrainCompiler`, `Heightmap.FindHeightmap(Vector3, float, List)`,
+  `Heightmap.GetHeight(int, int)`, `Heightmap.WorldToVertex`, `Heightmap.Poke`: finding and refreshing each zone.
+- *planned* `ClutterSystem.ResetGrass`: regrowing grass on the new surface.
+- *planned* A postfix on `TerrainComp.Awake` to register the wand's RPC on each terrain record.
+- *planned* Prefab `Hoe` (cloned for the wand's model) and `Stone` (recipe).
+
 ## Prefabs and assets
 
 Not game code, so no script can check these. They come from the game's asset bundles: vanilla prefabs the mod
