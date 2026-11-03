@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using HarmonyLib;
 using UnityEngine;
 
-namespace QuanZoneGrid
+namespace QuanTerraforming
 {
     // Draws zone (chunk) borders around the player and a coloured post at every zone corner.
     //
@@ -34,7 +34,7 @@ namespace QuanZoneGrid
 
         private void Awake()
         {
-            _root = new GameObject("QuanZoneGridLines").transform;
+            _root = new GameObject("QuanTerraformingLines").transform;
             DontDestroyOnLoad(_root.gameObject);
             _root.gameObject.SetActive(false);
         }
@@ -189,7 +189,7 @@ namespace QuanZoneGrid
         {
             if (_used == _pool.Count)
             {
-                var go = new GameObject("QuanZoneGridLine");
+                var go = new GameObject("QuanTerraformingLine");
                 go.transform.SetParent(_root, false);
                 var lr = go.AddComponent<LineRenderer>();
                 lr.useWorldSpace = true;

@@ -1,14 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <!-- Framework, references, deploy and packaging come from Directory.Build.props/.targets. -->
   <PropertyGroup>
-    <AssemblyName>QuanZoneGrid</AssemblyName>
-    <RootNamespace>QuanZoneGrid</RootNamespace>
+    <AssemblyName>QuanTerraforming</AssemblyName>
+    <RootNamespace>QuanTerraforming</RootNamespace>
 
     <!-- The ONLY place to bump the version: feeds the plugin attribute and the generated manifest.json -->
     <Version>1.0.0</Version>
 
     <!-- Thunderstore manifest description: max 250 characters, no double quotes. -->
-    <ThunderstoreDescription>Client-only builder overlay: shows zone (chunk) borders and colours each zone corner by sea depth, the value that sets wave height, so you can terraform coasts and canals without waves washing over them.</ThunderstoreDescription>
+    <ThunderstoreDescription>Terraforming fix and overlay: sea waves follow your terrain edits instead of the original seabed, so raised coasts, canals and harbours stay calm. Includes a zone (chunk) grid showing the corner depths that set wave height.</ThunderstoreDescription>
     <!-- Becomes website_url in manifest.json: the Thunderstore page's link to the repo (and its Issues).
          Leave empty to use this repo's git remote automatically; set it only to point somewhere else. -->
     <RepoUrl></RepoUrl>
