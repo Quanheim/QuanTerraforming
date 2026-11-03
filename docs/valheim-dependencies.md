@@ -36,6 +36,16 @@ a change in behaviour isn't, so list the ones whose behaviour the mod depends on
 
 | Game code | Used for |
 |---|---|
+| `Heightmap.GetAllHeightmaps` | Lists loaded zone heightmaps to read their corner depths. |
+| `Heightmap.IsDistantLod` | Skips the distant low-detail terrain, which isn't a zone. |
+| `Heightmap.GetOceanDepth` | The four corner depths (array overload), the same values the water uses for waves. |
+| `Heightmap.m_width` | With `m_scale`, places each corner in the world. |
+| `Heightmap.m_scale` | As above. |
+| `Heightmap.GetHeight` | Static `(Vector3, out float)`: terrain height for drawing border lines and unloaded corner posts. |
+| `Player.m_localPlayer` | Where to centre the grid. |
+| `Chat.HasFocus` | Ignores the toggle key while typing in chat. |
+| `Console.IsVisible` | Ignores the toggle key while the console is open. |
+| `TextInput.IsVisible` | Ignores the toggle key while a text box (sign, tame name) is open. |
 
 ### Behaviour the mod assumes
 
@@ -44,6 +54,12 @@ Things the game does that the mod counts on without calling them, e.g. "only the
 
 | Game code | Assumption |
 |---|---|
+| `Heightmap.UpdateCornerDepths` | Corner order is 0=(xmin,zmax), 1=(xmax,zmax), 2=(xmax,zmin), 3=(xmin,zmin); depth is `max(0, 30 - height)`. |
+| `WaterVolume.DetectWaterDepth` | Waves read the heightmap's corner depths on `Start`, divided by 10 and clamped to 0..1. |
+| `WaterVolume.Depth` | Wave strength is a bilinear blend of the four corners across the zone. |
+| `WaterVolume.CalcWave` | Wave height scales linearly with that blended depth (0 = flat). |
+| `ZoneSystem.m_zoneSize` | Zones are 64 m, centred on multiples of 64 (hard-coded in the overlay). |
+| `ZoneSystem.m_waterLevel` | Sea level is 30 m (hard-coded in the overlay). |
 
 ## Prefabs and assets
 
@@ -53,3 +69,4 @@ after each update.
 
 | Prefab or asset | Used for | Breaks if |
 |---|---|---|
+| Shader `Sprites/Default` (falls back to `Hidden/Internal-Colored`, then `UI/Default`) | Line material for borders and posts. | Lines are invisible or pink: the build no longer includes these shaders. |

@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Framework, references, deploy and packaging come from Directory.Build.props/.targets. -->
+  <PropertyGroup>
+    <AssemblyName>QuanZoneGrid</AssemblyName>
+    <RootNamespace>QuanZoneGrid</RootNamespace>
+
+    <!-- The ONLY place to bump the version: feeds the plugin attribute and the generated manifest.json -->
+    <Version>1.0.0</Version>
+
+    <!-- Thunderstore manifest description: max 250 characters, no double quotes. -->
+    <ThunderstoreDescription>Client-only builder overlay: shows zone (chunk) borders and colours each zone corner by sea depth, the value that sets wave height, so you can terraform coasts and canals without waves washing over them.</ThunderstoreDescription>
+    <!-- Becomes website_url in manifest.json: the Thunderstore page's link to the repo (and its Issues).
+         Leave empty to use this repo's git remote automatically; set it only to point somewhere else. -->
+    <RepoUrl></RepoUrl>
+  </PropertyGroup>
+
+  <!-- Extra Unity modules this mod uses: IMGUI for the on-screen box. -->
+  <ItemGroup>
+    <Reference Include="UnityEngine.IMGUIModule"><HintPath>$(ManagedDir)\UnityEngine.IMGUIModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.TextRenderingModule"><HintPath>$(ManagedDir)\UnityEngine.TextRenderingModule.dll</HintPath><Private>false</Private></Reference>
+  </ItemGroup>
+</Project>
