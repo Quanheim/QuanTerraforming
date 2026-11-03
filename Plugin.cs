@@ -24,8 +24,8 @@ namespace QuanZoneGrid
             const string display = "1 - Display (personal)";
             ShowOnStart = Config.Bind(display, "Show on start", false,
                 "Show the zone grid as soon as you enter a world. Otherwise press the toggle key. Personal.");
-            ToggleKey = Config.Bind(display, "Toggle key", new KeyboardShortcut(KeyCode.F7),
-                "Shows or hides the zone grid. Personal.");
+            ToggleKey = Config.Bind(display, "Toggle key", new KeyboardShortcut(KeyCode.G, KeyCode.LeftAlt),
+                "Shows or hides the zone grid. Not F7: Magic Mike's Mod Settings opens on that. Personal.");
             Radius = Config.Bind(display, "Radius", 3,
                 new ConfigDescription("How many zones to draw on each side of the one you're standing in. Personal.",
                     new AcceptableValueRange<int>(1, 8)));

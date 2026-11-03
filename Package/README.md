@@ -14,7 +14,7 @@ or harbour without waves washing over it.
 
 ## What you see
 
-Press **F7** to show or hide it (hidden by default).
+Press **Left Alt + G** to show or hide it (hidden by default). The key can be changed in the settings.
 
 - **White lines** along zone borders around you.
 - **A post at every zone corner**, coloured by the depth the waves use:
