@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using HarmonyLib;
 using UnityEngine;
 
 namespace QuanZoneGrid
@@ -118,10 +119,14 @@ namespace QuanZoneGrid
             for (int i = _used; i < _pool.Count; i++) _pool[i].gameObject.SetActive(false);
 
             float cx = zx * ZoneSize, cz = zz * ZoneSize, h = ZoneSize / 2f;
+            float[] sea = SeaDepths(new Vector3(cx, 0f, cz));
+            // Corner order matches Heightmap.UpdateCornerDepths and WaterVolume.m_normalizedDepth.
             _hud = $"Zone ({zx}, {zz})   {Plugin.ToggleKey.Value} hides\n" +
-                   $"NW {Describe(cx - h, cz + h)}    NE {Describe(cx + h, cz + h)}\n" +
-                   $"SW {Describe(cx - h, cz - h)}    SE {Describe(cx + h, cz - h)}\n" +
-                   "Waves re-read the corners when the zone reloads.";
+                   $"NW  ground {Describe(cx - h, cz + h)}  ·  sea waves {SeaText(sea, 0)}\n" +
+                   $"NE  ground {Describe(cx + h, cz + h)}  ·  sea waves {SeaText(sea, 1)}\n" +
+                   $"SE  ground {Describe(cx + h, cz - h)}  ·  sea waves {SeaText(sea, 2)}\n" +
+                   $"SW  ground {Describe(cx - h, cz - h)}  ·  sea waves {SeaText(sea, 3)}\n" +
+                   "Ground = terrain now, edits included. Sea waves = what this zone's sea is using.";
         }
 
         private string Describe(float x, float z)
@@ -130,6 +135,21 @@ namespace QuanZoneGrid
             if (d <= 0f) return "above sea (0%)";
             return $"{d:0.0} m deep ({Mathf.Clamp01(d / FullWaveDepth) * 100f:0}%)";
         }
+
+        // WaterVolume copies its heightmap's corner depths (divided by 10, clamped 0..1) once, in Start.
+        private static readonly AccessTools.FieldRef<WaterVolume, float[]> NormalizedDepth =
+            AccessTools.FieldRefAccess<WaterVolume, float[]>("m_normalizedDepth");
+
+        private static float[] SeaDepths(Vector3 zoneCentre)
+        {
+            Heightmap hm = Heightmap.FindHeightmap(zoneCentre);
+            if (hm == null) return null;
+            foreach (WaterVolume water in WaterVolume.Instances)
+                if (water != null && water.m_heightmap == hm) return NormalizedDepth(water);
+            return null;
+        }
+
+        private static string SeaText(float[] sea, int i) => sea == null ? "n/a" : $"{sea[i] * 100f:0}%";
 
         private void GroundLine(Vector3 a, Vector3 b, Color color)
         {
@@ -200,7 +220,7 @@ namespace QuanZoneGrid
             if (!Visible || Player.m_localPlayer == null || _hud.Length == 0) return;
             if (_hudStyle == null)
                 _hudStyle = new GUIStyle(GUI.skin.box) { fontSize = 16, alignment = TextAnchor.UpperLeft, wordWrap = false };
-            GUI.Box(new Rect(20f, Screen.height * 0.35f, 540f, 100f), _hud, _hudStyle);
+            GUI.Box(new Rect(20f, Screen.height * 0.35f, 720f, 150f), _hud, _hudStyle);
         }
     }
 }

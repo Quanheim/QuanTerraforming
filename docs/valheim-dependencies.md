@@ -28,6 +28,7 @@ at runtime, not compile time, if renamed.
 
 | Game code | Kind | Used for |
 |---|---|---|
+| `WaterVolume.m_normalizedDepth` | Private field (`float[4]`) | The corner depths the sea is actually using, shown beside the terrain's own. |
 
 ### Public game code called or read
 
@@ -42,6 +43,9 @@ a change in behaviour isn't, so list the ones whose behaviour the mod depends on
 | `Heightmap.m_width` | With `m_scale`, places each corner in the world. |
 | `Heightmap.m_scale` | As above. |
 | `Heightmap.GetHeight` | Static `(Vector3, out float)`: terrain height for drawing border lines and unloaded corner posts. |
+| `Heightmap.FindHeightmap` | `(Vector3)`: the heightmap of the zone the player is in. |
+| `WaterVolume.Instances` | Finds the sea belonging to that zone. |
+| `WaterVolume.m_heightmap` | Matches a sea to its zone's heightmap. |
 | `Player.m_localPlayer` | Where to centre the grid. |
 | `Chat.HasFocus` | Ignores the toggle key while typing in chat. |
 | `Console.IsVisible` | Ignores the toggle key while the console is open. |
@@ -55,7 +59,7 @@ Things the game does that the mod counts on without calling them, e.g. "only the
 | Game code | Assumption |
 |---|---|
 | `Heightmap.UpdateCornerDepths` | Corner order is 0=(xmin,zmax), 1=(xmax,zmax), 2=(xmax,zmin), 3=(xmin,zmin); depth is `max(0, 30 - height)`. |
-| `WaterVolume.DetectWaterDepth` | Waves read the heightmap's corner depths on `Start`, divided by 10 and clamped to 0..1. |
+| `WaterVolume.DetectWaterDepth` | Waves read the heightmap's corner depths once, on `Start`, divided by 10 and clamped to 0..1. That runs before the zone's `TerrainComp` loads, so the sea keeps the unedited world-generated depths. |
 | `WaterVolume.Depth` | Wave strength is a bilinear blend of the four corners across the zone. |
 | `WaterVolume.CalcWave` | Wave height scales linearly with that blended depth (0 = flat). |
 | `ZoneSystem.m_zoneSize` | Zones are 64 m, centred on multiples of 64 (hard-coded in the overlay). |

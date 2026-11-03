@@ -21,11 +21,12 @@ Press **Left Alt + G** to show or hide it (hidden by default). The key can be ch
   - green: at or above sea level, so no waves from that corner
   - yellow to red: deeper; red means 10 m or more (full waves)
   - grey: that zone isn't loaded yet
-- **A box on screen** listing the four corners of the zone you're standing in, with each depth and how much wave
-  height it allows.
+- **A box on screen** listing the four corners of the zone you're standing in: the ground depth after your edits,
+  and the wave strength the zone's sea is actually using.
 
-The colours follow your terrain edits within a second. The water itself only re-reads the corners when the zone
-loads, so log out and back in (or travel away and back) to see the change in the sea.
+The posts and the ground figures follow your terrain edits within a second. In vanilla the sea doesn't: it reads
+the corners when the zone loads, before your terrain edits are applied, so it keeps the seabed as the world was
+generated. The two figures in the box show when they differ.
 
 Tip: a canal down the middle of a zone never touches a corner. One along a zone border hits a corner every 64 m, and
 each corner is shared by the zones on both sides.
