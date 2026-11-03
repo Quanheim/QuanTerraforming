@@ -20,6 +20,9 @@ What the mod patches. A changed signature stops the patch applying; changed logi
 
 | Game code | Patch | What it does | If the game changes it |
 |---|---|---|---|
+| `TerrainComp.LevelTerrain` | Transpiler | Replaces the `-8f`/`8f` clamp on the stored height change with the Max dig/Max raise settings. | Constants moved or changed: logs an error and that limit stays at vanilla. |
+| `TerrainComp.RaiseTerrain` | Transpiler | As above. | As above. |
+| `TerrainComp.ApplyToHeightmap` | Transpiler | Replaces the two `8f` in `Clamp(h, base - 8, base + 8)`: first with Max dig, second with Max raise. | Order of the two constants changes: dig and raise swap. Constants gone: logs an error. |
 | `Heightmap.UpdateCornerDepths` | Postfix | Makes the zone's sea re-read its corner depths, so waves follow terrain edits. | Renamed or no longer called on full regenerate: waves go back to the world-generated seabed. |
 
 ### Private members reached by reflection

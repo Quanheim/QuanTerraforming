@@ -14,6 +14,15 @@ arrive, and after every new edit. Raise all four corners of a zone to sea level 
 even in a storm. Leave one corner deep and waves blend in from that side. Terrain in the middle of a zone doesn't
 count; only the corners do.
 
+## Terrain limits
+
+Vanilla only lets you raise or dig terrain 8 m from where the world generated it. This lifts that to the server's
+settings (200 m each way by default), replacing Heightmap Unlimited JvL. If that mod is installed too, this part
+stands aside and lets it carry on.
+
+Your raised land is stored as those larger height changes. Without either mod it shows cut back to 8 m, and an edit
+there saves the cut, so swap the two mods over in one go, with the same limits.
+
 ## Zone grid
 
 Press **Left Alt + G** to show or hide it (hidden by default). The key can be changed in the settings.
@@ -32,7 +41,8 @@ each corner is shared by the zones on both sides.
 ## Settings
 
 - `1 - Sea`: **Waves follow terrain edits** (on). Synced from the server; admins only. Off is vanilla.
-- `2 - Zone grid (personal)`: show on start, the toggle key, and how many zones to draw around you.
+- `2 - Terrain limits`: **Max raise** and **Max dig** (200 m each). Synced from the server; admins only.
+- `3 - Zone grid (personal)`: show on start, the toggle key, and how many zones to draw around you.
 
 ## Multiplayer
 

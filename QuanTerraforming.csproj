@@ -8,7 +8,7 @@
     <Version>1.0.0</Version>
 
     <!-- Thunderstore manifest description: max 250 characters, no double quotes. -->
-    <ThunderstoreDescription>Terraforming fix and overlay: sea waves follow your terrain edits instead of the original seabed, so raised coasts, canals and harbours stay calm. Includes a zone (chunk) grid showing the corner depths that set wave height.</ThunderstoreDescription>
+    <ThunderstoreDescription>Terraforming fix and overlay: sea waves follow your terrain edits instead of the original seabed, so raised coasts, canals and harbours stay calm. Lifts the 8 m terrain limit. Zone grid shows wave-setting corner depths.</ThunderstoreDescription>
     <!-- Becomes website_url in manifest.json: the Thunderstore page's link to the repo (and its Issues).
          Leave empty to use this repo's git remote automatically; set it only to point somewhere else. -->
     <RepoUrl></RepoUrl>

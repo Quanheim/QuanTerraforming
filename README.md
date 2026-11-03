@@ -21,5 +21,9 @@ The fix ([SeaFollowsTerrain.cs](SeaFollowsTerrain.cs)) is a postfix on `Heightma
 every full regenerate (load, edits arriving, each new edit). It clears the sea's cached `m_oneDepth`, then calls its
 `DetectWaterDepth` and `SetupMaterial` again, so both the physics and the wave shader get the new depths.
 
+Terrain limits ([TerrainLimits.cs](TerrainLimits.cs)) transpile `TerrainComp.LevelTerrain`, `RaiseTerrain` and
+`ApplyToHeightmap`, replacing vanilla's 8 m constants with the synced Max raise / Max dig settings. This replaces
+Heightmap Unlimited JvL (our own code; same idea). With that mod installed, `Prepare` skips these patches.
+
 The overlay ([ZoneGridOverlay.cs](ZoneGridOverlay.cs)) draws the corner posts from the heightmap's depths, and its
 on-screen box shows those beside the sea's own copy (`m_normalizedDepth`), so you can see whether they agree.
