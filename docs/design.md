@@ -1,13 +1,42 @@
 # QuanTerraforming: design and status
 
-**Read this first when picking the mod up.** Last updated 4 Nov 2026, after Quandru's first in-game test.
+**Read this first when picking the mod up.** Last updated 4 Nov 2026, end of the day of Quandru's first in-game tests.
+
+## ▶ Next step: the heightmap switch-over test
+
+Proves the mod can replace Heightmap Unlimited JvL without anyone losing raised or dug terrain. Do it before the
+release and before touching the server.
+
+**Set-up:** a **separate Gale test profile** (not the main one) and a **throwaway single-player world**. Install and
+remove the mods in that profile with Gale, and **restart the game after every change**: mods only load at start-up.
+Raise a pillar clearly past 8 m (15–20 m is plenty; something you can climb down from, since the last one killed
+you).
+
+**The one rule:** while **neither** mod is installed, don't edit terrain anywhere near the pillar (hoe, pickaxe,
+any terrain tool). The 8 m cut is only on display until an edit there saves it for good.
+
+| # | Do | Expect |
+|---|---|---|
+| 1 | Remove QuanTerraforming | Pillar shows cut to 8 m above the original ground. It doesn't vanish: it's still stored in full. |
+| 2 | Install Heightmap Unlimited | Back to full height at once (both mods read the same stored data). Raise it further. |
+| 3 | Remove Heightmap Unlimited | Cut to 8 m again. |
+| 4 | Reinstall it, raise again | Full height plus the new raise. |
+| 5 | Remove it, install QuanTerraforming | **Full height kept: this is the real switch-over.** |
+| 6 | Both installed (optional) | Full height; QuanTerraforming's log warns that Heightmap Unlimited handles the limits. |
+
+While in that world, also check the two things not yet seen in game:
+- **Dropped wand:** drop it on the ground; it should lie flat, not stand on end or float.
+- **Sea fix:** at a raised coast whose zone corners are all above sea level, the waves should be flat, and with the
+  wand out the box's "ground" and "sea waves" figures should agree.
+
+If anything doesn't match, tell Claude what you saw at which step.
 
 ## Where we are
 
 | Part | State |
 |---|---|
-| Sea follows terrain edits | Built. Not yet confirmed in game (Quandru was playing client-only without it). |
-| Heightmap limits (replaces Heightmap Unlimited JvL) | Built. Not yet tested in game. |
+| Sea follows terrain edits | Built. Not yet confirmed in game (see the next step). |
+| Heightmap limits (replaces Heightmap Unlimited JvL) | Raising past 8 m works (pillar, 4 Nov). Switch-over test is the next step. |
 | Zone grid | Working in game with the wand in hand (4 Nov). The first build missed it: `GetCurrentWeapon` skips tools; it now reads the right-hand item. |
 | Terraforming Wand item | Seen in game 4 Nov: crafting card, icon and shape all good; doesn't attack. Stays two-handed like every tool (agreed 4 Nov). No tools on it yet. |
 | Natural ground tool | Designed below. Not started. |
@@ -15,33 +44,16 @@
 
 ### V1 (1.0.0) release checklist
 
-1. **Quandru:** import `dist\Quandru-QuanTerraforming-1.0.0.zip` into a separate Gale profile (with Jotunn) and check:
-   - the wand appears in the inventory crafting panel for 2 Wood, with its icon, name and description;
-   - in hand it looks like the mockup ([images/wand-mockup.png](images/wand-mockup.png)), held where the hammer is,
-     and doesn't swing;
-   - holding it shows the grid and the on-screen box; putting it away hides them;
-   - dropped on the ground it lies flat (collider refit);
-   - standing at a raised coast, the box's "ground" and "sea waves" figures agree, and the waves there are flat;
-   - raising terrain past 8 m works.
-2. ~~Screenshots for `Package/README.md`.~~ Done 4 Nov: `docs/images/zone-grid.jpg`, `wand-in-hand.jpg`, and
+1. ~~First in-game test~~ (4 Nov): wand crafting, look, no attack, grid while held, raising past 8 m all good.
+2. ~~Screenshots for `Package/README.md`~~ (4 Nov): `docs/images/zone-grid.jpg`, `wand-in-hand.jpg`, and
    `wand-card.png` (made by `tools/card.py` from the crafting screenshot, since a tool has no build-menu card).
-2b. **Heightmap switch-over test** (Quandru, 4 Nov: raising a pillar past 8 m works). In a throwaway single-player
-   world, with a pillar raised well past 8 m. **While neither mod is installed, don't edit terrain near the pillar:**
-   the 8 m clamp is only on display until an edit there saves it.
-   | Step | Expect |
-   |---|---|
-   | Remove QuanTerraforming | Pillar shows cut to 8 m above the original ground (still stored in full). |
-   | Install Heightmap Unlimited | Back to full height at once (same stored data). Raise it further. |
-   | Remove Heightmap Unlimited | Cut to 8 m again. |
-   | Reinstall it, raise again | Full height plus the new raise. |
-   | Remove it, install QuanTerraforming | Full height kept: the real switch-over. |
-   | Both installed | Full height; our log warns that Heightmap Unlimited handles the limits. |
-3. Fix whatever the test finds, then release per `docs/DEVELOPMENT.md` section 6: tag `v1.0.0`, upload the zip to
+3. **The heightmap switch-over test, dropped wand and sea fix** (the next step, above).
+4. Fix whatever the test finds, then release per `docs/DEVELOPMENT.md` section 6: tag `v1.0.0`, upload the zip to
    Thunderstore (team Quandru).
-4. **Server switch-over, in one push from the server's Gale profile:** add QuanTerraforming, remove Heightmap
+5. **Server switch-over, in one push from the server's Gale profile:** add QuanTerraforming, remove Heightmap
    Unlimited JvL, leave `1 - Heightmap` at 200/200. Never let anyone play with neither mod: raised land shows cut
    back to 8 m and edits there save the cut.
-5. Give the mod its own Gale dev profile ("QuanTerraforming", with Jotunn). `Local.props` currently borrows the
+6. Give the mod its own Gale dev profile ("QuanTerraforming", with Jotunn). `Local.props` currently borrows the
    QuanChunkLoader profile for build references only.
 
 ## Settings (as built)
