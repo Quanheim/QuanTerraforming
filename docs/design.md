@@ -25,6 +25,17 @@
    - raising terrain past 8 m works.
 2. ~~Screenshots for `Package/README.md`.~~ Done 4 Nov: `docs/images/zone-grid.jpg`, `wand-in-hand.jpg`, and
    `wand-card.png` (made by `tools/card.py` from the crafting screenshot, since a tool has no build-menu card).
+2b. **Heightmap switch-over test** (Quandru, 4 Nov: raising a pillar past 8 m works). In a throwaway single-player
+   world, with a pillar raised well past 8 m. **While neither mod is installed, don't edit terrain near the pillar:**
+   the 8 m clamp is only on display until an edit there saves it.
+   | Step | Expect |
+   |---|---|
+   | Remove QuanTerraforming | Pillar shows cut to 8 m above the original ground (still stored in full). |
+   | Install Heightmap Unlimited | Back to full height at once (same stored data). Raise it further. |
+   | Remove Heightmap Unlimited | Cut to 8 m again. |
+   | Reinstall it, raise again | Full height plus the new raise. |
+   | Remove it, install QuanTerraforming | Full height kept: the real switch-over. |
+   | Both installed | Full height; our log warns that Heightmap Unlimited handles the limits. |
 3. Fix whatever the test finds, then release per `docs/DEVELOPMENT.md` section 6: tag `v1.0.0`, upload the zip to
    Thunderstore (team Quandru).
 4. **Server switch-over, in one push from the server's Gale profile:** add QuanTerraforming, remove Heightmap
