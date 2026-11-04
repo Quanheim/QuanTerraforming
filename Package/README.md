@@ -9,7 +9,7 @@ Terraform coasts, canals and harbours without the game ignoring your work.
 
 Everyone on a server needs the mod installed: the server and every player connecting to it.
 
-<!-- Screenshots to add: the wand's crafting card, the wand in hand with the grid showing. -->
+<p><img src="https://raw.githubusercontent.com/Quanheim/QuanTerraforming/main/docs/images/zone-grid.jpg" alt="Holding the Terraforming Wand at a raised coast: white zone borders, corner posts from green (above sea level) to red (deep), and the on-screen box listing each corner's ground depth and wave strength" width="640"></p>
 
 ## Waves follow your terrain
 
@@ -37,6 +37,13 @@ stands aside and lets it carry on.
 > step, with the same limits.
 
 ## The Terraforming Wand
+
+<table>
+<tr>
+<td><img src="https://raw.githubusercontent.com/Quanheim/QuanTerraforming/main/docs/images/wand-card.png" alt="The wand's crafting card: Terraforming Wand, a wand for shaping the land, from QuanTerraforming. Costs 2 Wood." width="320"></td>
+<td><img src="https://raw.githubusercontent.com/Quanheim/QuanTerraforming/main/docs/images/wand-in-hand.jpg" alt="The Terraforming Wand in a Viking's hand: a pale wooden grip and collar with a long dark-wood body" width="400"></td>
+</tr>
+</table>
 
 | Cost | Crafting station |
 |---|---|

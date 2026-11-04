@@ -24,6 +24,7 @@ tools\.venv\Scripts\python -I tools\render_icon.py   # -> wand_icon.png: copy to
 | `textures.py` | Exports `weapons1` and every darkwood material's main texture. |
 | `render_wand.py` | Renders the approved mockup. **Its `PROFILE` must match `WandMesh.Profile`.** |
 | `render_icon.py` | Renders the inventory icon from the same profile. |
+| `card.py <screenshot> <out>` | Makes the README's wand card from an in-game crafting screenshot: the top of the card joined to the requirement row. A tool has no build-menu card, so this stands in for one. |
 
 What we learnt about the hammer (Valheim 1.0.21): `Hammer/attach/hammer` holds the mesh, rotated 90° about X and
 scaled 0.3. The mesh runs along +Y from the butt (-0.342) to the top of the shaft (1.228); the head spans about 0.72

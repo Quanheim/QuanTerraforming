@@ -8,8 +8,8 @@
 |---|---|
 | Sea follows terrain edits | Built. Not yet confirmed in game (Quandru was playing client-only without it). |
 | Heightmap limits (replaces Heightmap Unlimited JvL) | Built. Not yet tested in game. |
-| Zone grid | Built and seen working in game (earlier toggle-key version). The 4 Nov test showed no grid with the wand in hand: the check used `GetCurrentWeapon`, which skips tools. Fixed to read the right-hand item; needs a retest. |
-| Terraforming Wand item | Seen in game 4 Nov: crafting card, icon and shape all good. Collar slimmed (thumb clipped it). No tools on it yet. |
+| Zone grid | Working in game with the wand in hand (4 Nov). The first build missed it: `GetCurrentWeapon` skips tools; it now reads the right-hand item. |
+| Terraforming Wand item | Seen in game 4 Nov: crafting card, icon and shape all good; doesn't attack. Stays two-handed like every tool (agreed 4 Nov). No tools on it yet. |
 | Natural ground tool | Designed below. Not started. |
 | Beach tool | Designed below. Waiting on the sand test. |
 
@@ -23,9 +23,8 @@
    - dropped on the ground it lies flat (collider refit);
    - standing at a raised coast, the box's "ground" and "sea waves" figures agree, and the waves there are flat;
    - raising terrain past 8 m works.
-2. **Quandru:** screenshots of the wand's crafting card and the wand in hand with the grid, for `Package/README.md`
-   (there's a placeholder comment where they go; copy the QuanPieces README's image layout, images in
-   `docs/images/`, linked by raw GitHub URL).
+2. ~~Screenshots for `Package/README.md`.~~ Done 4 Nov: `docs/images/zone-grid.jpg`, `wand-in-hand.jpg`, and
+   `wand-card.png` (made by `tools/card.py` from the crafting screenshot, since a tool has no build-menu card).
 3. Fix whatever the test finds, then release per `docs/DEVELOPMENT.md` section 6: tag `v1.0.0`, upload the zip to
    Thunderstore (team Quandru).
 4. **Server switch-over, in one push from the server's Gale profile:** add QuanTerraforming, remove Heightmap
@@ -52,7 +51,7 @@ Later, for the tools: `4 - Wand` with **Max radius** (32 m, enforced: big areas 
 |---|---|
 | Name | Terraforming Wand |
 | Description | "A wand for shaping the land, from QuanTerraforming. Hold it to see the zone grid ... which is what sets wave height there." (No mention of future tools: Quandru, 4 Nov.) |
-| Two-handed | The tooltip says "Two-handed": the game says that of every tool (hammer, hoe), and equipping a tool does put away whatever's in both hands. Making it truly one-handed (torch in the other hand) would mean changing its item type: asked Quandru, 4 Nov. |
+| Two-handed | The tooltip says "Two-handed": the game says that of every tool (hammer, hoe), and equipping a tool does put away whatever's in both hands. Making it truly one-handed (torch in the other hand) would mean changing its item type; Quandru chose to leave it two-handed, 4 Nov. |
 | Recipe | 2 Wood, no crafting station (inventory crafting panel, like the hammer). |
 | Where | Not in QuanPieces' hammer tab: that tab is for placed pieces, and the wand is an item you hold. Agreed. |
 | Behaviour (V1) | Not a build tool yet (no piece table), doesn't swing, no durability, weight 0.5. Holding it shows the zone grid. No key binding: holding the wand is the switch. |
@@ -62,8 +61,8 @@ Later, for the tools: `4 - Wand` with **Max radius** (32 m, enforced: big areas 
 
 - **Grip:** the hammer's own wood (handle patch of the `weapons` atlas), straight at radius 0.066 from a small bevel
   at the butt to the collar. No flare.
-- **Collar:** 0.13–0.20, radius 0.072, same wood slightly darker. (Was 0.08; the thumb clipped through it in game,
-  4 Nov.)
+- **Collar:** 0.13–0.20, radius 0.08, same wood slightly darker. The thumb clips it slightly in game; a slimmer
+  collar (0.072) was tried on 4 Nov and reverted: Quandru found the wand looked less congruent with it. Keep 0.08.
 - **Body:** `DarkWood_mat` (darkwood beams/roof), radius 0.0435 just after the collar (25% thinner than first drawn),
   nearly straight to half way (0.039 at 0.72), then most of the taper in the second half to a blunt tip at 1.228:
   the full length of the hammer's shaft, through where the head was.

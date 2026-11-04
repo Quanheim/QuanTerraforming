@@ -23,7 +23,7 @@ namespace QuanTerraforming.Wand
         private static readonly Ring[] Profile =
         {
             new Ring(-0.342f, 0.048f, Part.Grip), new Ring(-0.326f, 0.066f, Part.Grip), new Ring(0.120f, 0.066f, Part.Grip),
-            new Ring(0.130f, 0.072f, Part.Collar), new Ring(0.200f, 0.072f, Part.Collar),   // slim: the thumb rests here
+            new Ring(0.130f, 0.080f, Part.Collar), new Ring(0.200f, 0.080f, Part.Collar),
             new Ring(0.210f, 0.0435f, Part.Body), new Ring(0.720f, 0.039f, Part.Body),   // first half: nearly straight
             new Ring(0.960f, 0.030f, Part.Body), new Ring(1.150f, 0.018f, Part.Body),    // last half: most of the taper
             new Ring(1.205f, 0.012f, Part.Body), new Ring(1.228f, 0f, Part.Body),        // blunt tip
@@ -31,7 +31,7 @@ namespace QuanTerraforming.Wand
 
         internal const float ButtY = -0.342f;
         internal const float TipY = 1.228f;
-        internal const float MaxRadius = 0.072f;
+        internal const float MaxRadius = 0.080f;
 
         // The hammer handle's area of the weapons atlas (u0, u1, v0, v1), read from the vanilla mesh's UVs.
         private static readonly Vector4 GripUv = new Vector4(0.807f, 0.834f, 0.627f, 0.734f);
