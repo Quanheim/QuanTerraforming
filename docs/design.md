@@ -1,6 +1,6 @@
 # QuanTerraforming: design and status
 
-**Read this first when picking the mod up.** Last updated 3 Nov 2026, end of the session that created the mod.
+**Read this first when picking the mod up.** Last updated 4 Nov 2026, after Quandru's first in-game test.
 
 ## Where we are
 
@@ -8,8 +8,8 @@
 |---|---|
 | Sea follows terrain edits | Built. Not yet confirmed in game (Quandru was playing client-only without it). |
 | Heightmap limits (replaces Heightmap Unlimited JvL) | Built. Not yet tested in game. |
-| Zone grid | Built and seen working in game (earlier toggle-key version). Now shows only while the wand is held. |
-| Terraforming Wand item | Built (model, icon, recipe). Not yet seen in game. No tools on it yet. |
+| Zone grid | Built and seen working in game (earlier toggle-key version). The 4 Nov test showed no grid with the wand in hand: the check used `GetCurrentWeapon`, which skips tools. Fixed to read the right-hand item; needs a retest. |
+| Terraforming Wand item | Seen in game 4 Nov: crafting card, icon and shape all good. Collar slimmed (thumb clipped it). No tools on it yet. |
 | Natural ground tool | Designed below. Not started. |
 | Beach tool | Designed below. Waiting on the sand test. |
 
@@ -51,7 +51,8 @@ Later, for the tools: `4 - Wand` with **Max radius** (32 m, enforced: big areas 
 | | |
 |---|---|
 | Name | Terraforming Wand |
-| Description | "A wand for shaping the land, from QuanTerraforming. Hold it to see the zone grid ... Shaping tools are on the way." |
+| Description | "A wand for shaping the land, from QuanTerraforming. Hold it to see the zone grid ... which is what sets wave height there." (No mention of future tools: Quandru, 4 Nov.) |
+| Two-handed | The tooltip says "Two-handed": the game says that of every tool (hammer, hoe), and equipping a tool does put away whatever's in both hands. Making it truly one-handed (torch in the other hand) would mean changing its item type: asked Quandru, 4 Nov. |
 | Recipe | 2 Wood, no crafting station (inventory crafting panel, like the hammer). |
 | Where | Not in QuanPieces' hammer tab: that tab is for placed pieces, and the wand is an item you hold. Agreed. |
 | Behaviour (V1) | Not a build tool yet (no piece table), doesn't swing, no durability, weight 0.5. Holding it shows the zone grid. No key binding: holding the wand is the switch. |
@@ -61,7 +62,8 @@ Later, for the tools: `4 - Wand` with **Max radius** (32 m, enforced: big areas 
 
 - **Grip:** the hammer's own wood (handle patch of the `weapons` atlas), straight at radius 0.066 from a small bevel
   at the butt to the collar. No flare.
-- **Collar:** 0.13–0.20, radius 0.08, same wood slightly darker.
+- **Collar:** 0.13–0.20, radius 0.072, same wood slightly darker. (Was 0.08; the thumb clipped through it in game,
+  4 Nov.)
 - **Body:** `DarkWood_mat` (darkwood beams/roof), radius 0.0435 just after the collar (25% thinner than first drawn),
   nearly straight to half way (0.039 at 0.72), then most of the taper in the second half to a blunt tip at 1.228:
   the full length of the hammer's shaft, through where the head was.

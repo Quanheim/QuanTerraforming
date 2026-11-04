@@ -24,7 +24,7 @@ What the mod patches. A changed signature stops the patch applying; changed logi
 | `TerrainComp.RaiseTerrain` | Transpiler | As above. | As above. |
 | `TerrainComp.ApplyToHeightmap` | Transpiler | Replaces the two `8f` in `Clamp(h, base - 8, base + 8)`: first with the lower limit, second with the upper limit. | Order of the two constants changes: dig and raise swap. Constants gone: logs an error. |
 | `Heightmap.UpdateCornerDepths` | Postfix | Makes the zone's sea re-read its corner depths, so waves follow terrain edits. | Renamed or no longer called on full regenerate: waves go back to the world-generated seabed. |
-| `Humanoid.StartAttack` | Prefix | Returns false while the Terraforming Wand is the current weapon, so it doesn't swing. | Renamed: the wand swings like the hammer. |
+| `Humanoid.StartAttack` | Prefix | Returns false while the Terraforming Wand is in the right hand, so attacking with it out does nothing. | Renamed: attacking with the wand out throws a punch. |
 
 ### Private members reached by reflection
 
@@ -37,6 +37,7 @@ at runtime, not compile time, if renamed.
 | `WaterVolume.m_oneDepth` | Private field (`float`) | Cleared to -1 before re-reading: `DetectWaterDepth` sets it only when all corners match and never clears it. |
 | `WaterVolume.DetectWaterDepth` | Private method | Re-reads the heightmap's corner depths. |
 | `WaterVolume.SetupMaterial` | Private method | Pushes the new depths to the water shader, which draws the waves. |
+| `Humanoid.m_rightItem` | Protected field | Whether the wand is in hand (grid on, no attack). `GetCurrentWeapon` won't do: it skips tools. |
 
 ### Public game code called or read
 
@@ -56,7 +57,6 @@ a change in behaviour isn't, so list the ones whose behaviour the mod depends on
 | `WaterVolume.m_heightmap` | Matches a sea to its zone's heightmap. |
 | `WaterVolume.m_waterSurface` | Skips a sea without a surface renderer before calling `SetupMaterial`. |
 | `Player.m_localPlayer` | Where to centre the grid. |
-| `Humanoid.GetCurrentWeapon` | Whether the player is holding the wand (grid on, no swing). |
 | `ItemDrop.ItemData.SharedData.m_buildPieces` | Cleared on the wand, so it isn't a build tool. |
 | `ItemDrop.ItemData.SharedData.m_useDurability` | Off for the wand. |
 | `ItemDrop.ItemData.SharedData.m_canBeReparied` | Off for the wand. |
@@ -78,6 +78,7 @@ Things the game does that the mod counts on without calling them, e.g. "only the
 | `WaterVolume.CalcWave` | Wave height scales linearly with that blended depth (0 = flat). |
 | `ZoneSystem.m_zoneSize` | Zones are 64 m, centred on multiples of 64 (hard-coded in the overlay). |
 | `ZoneSystem.m_waterLevel` | Sea level is 30 m (hard-coded in the overlay). |
+| `Humanoid.EquipItem` | A `Tool` goes in the right hand and puts away both hands' items. |
 | `VisEquipment` | Shows a held item by copying its prefab's `attach` child into the hand, so replacing the mesh under `attach` changes what's held. |
 
 ### Planned (shaping tools, see docs/design.md)

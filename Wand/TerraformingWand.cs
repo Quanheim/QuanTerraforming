@@ -27,8 +27,7 @@ namespace QuanTerraforming.Wand
                 { NameToken.TrimStart('$'), "Terraforming Wand" },
                 { DescriptionToken.TrimStart('$'),
                   "A wand for shaping the land, from QuanTerraforming. Hold it to see the zone grid: the borders of " +
-                  "each 64 m zone, and how deep the sea is at each corner, which is what sets wave height there. " +
-                  "Shaping tools are on the way." },
+                  "each 64 m zone, and how deep the sea is at each corner, which is what sets wave height there." },
             });
             PrefabManager.OnVanillaPrefabsAvailable += AddItem;
         }
@@ -127,19 +126,24 @@ namespace QuanTerraforming.Wand
 
         internal static bool IsWand(ItemDrop.ItemData item) => item != null && item.m_shared.m_name == NameToken;
 
+        // The wand is a Tool, which equips in the right hand. Humanoid.GetCurrentWeapon only returns weapons (a tool
+        // gives the unarmed "weapon"), so read the right-hand item itself.
+        private static readonly AccessTools.FieldRef<Humanoid, ItemDrop.ItemData> RightItem =
+            AccessTools.FieldRefAccess<Humanoid, ItemDrop.ItemData>("m_rightItem");
+
         internal static bool HeldByLocalPlayer()
         {
             Player player = Player.m_localPlayer;
-            return player != null && IsWand(player.GetCurrentWeapon());
+            return player != null && IsWand(RightItem(player));
         }
 
-        // The hammer's attack would swing it like a club. The wand doesn't attack.
+        // Holding the wand, an attack would punch (the game treats tools as "no weapon"). The wand doesn't attack.
         [HarmonyPatch(typeof(Humanoid), nameof(Humanoid.StartAttack))]
         private static class NoSwing
         {
             private static bool Prefix(Humanoid __instance, ref bool __result)
             {
-                if (!IsWand(__instance.GetCurrentWeapon())) return true;
+                if (!IsWand(RightItem(__instance))) return true;
                 __result = false;
                 return false;
             }

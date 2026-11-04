@@ -10,7 +10,7 @@ dark = np.asarray(Image.open(os.path.join(here, "tex_DarkWood_mat.png")).convert
 # Wand profile in hammer-mesh units: (position along the handle, radius, part). Same numbers the mod uses.
 PROFILE = [
     (-0.342, 0.048, "grip"), (-0.326, 0.066, "grip"), (0.120, 0.066, "grip"),
-    (0.130, 0.080, "collar"), (0.200, 0.080, "collar"),
+    (0.130, 0.072, "collar"), (0.200, 0.072, "collar"),
     (0.210, 0.0435, "body"), (0.720, 0.039, "body"),         # first half: nearly straight
     (0.960, 0.030, "body"), (1.150, 0.018, "body"),          # last half: most of the taper
     (1.205, 0.012, "body"), (1.228, 0.0, "body"),            # blunt tip, at the end of the hammer's shaft
