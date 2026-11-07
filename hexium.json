@@ -13,6 +13,6 @@
   "namespace": "Quandru",
   "name": "QuanTerraforming",
   "community": "valheim",
-  "installLocation": "undefined",
-  "categories": ["undefined"]
+  "installLocation": "both",
+  "categories": ["Terraforming", "Building", "World Generation", "Tools", "Open Source", "Valheim 1.0"]
 }
