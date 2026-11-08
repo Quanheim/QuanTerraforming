@@ -7,6 +7,9 @@
 Proves the mod can replace Heightmap Unlimited JvL without anyone losing raised or dug terrain. Do it before the
 release and before touching the server.
 
+**Credit: decided (Quandru, 8 Nov 2026), none needed.** We replace Heightmap Unlimited only because we need the same
+function; none of its code is used. The README's "our own code; same idea" stays as a plain statement of fact.
+
 **Set-up:** a **separate Gale test profile** (not the main one) and a **throwaway single-player world**. Install and
 remove the mods in that profile with Gale, and **restart the game after every change**: mods only load at start-up.
 Raise a pillar clearly past 8 m (15–20 m is plenty; something you can climb down from, since the last one killed
