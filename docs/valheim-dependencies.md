@@ -94,6 +94,21 @@ tables so `check-mods.ps1` only checks what the mod really uses.
 - *planned* A postfix on `TerrainComp.Awake` to register the wand's RPC on each terrain record.
 - *planned* `ItemDrop.ItemData.SharedData.m_buildPieces` set to the wand's own piece table (in place of null).
 
+### Planned (map follows terrain edits, see docs/design.md)
+
+*Planned*, not in the code yet. These move into the tables above, as built, when the feature lands.
+
+- *planned* `Minimap` private `m_heightTexture`, `m_forestMaskTexture`, and `GetMaskColor`, plus public
+  `m_mapTexture`, `m_meadowsColor`, `m_textureSize`, `m_pixelSize`: rewriting map pixels.
+- *planned* Assumes `Minimap.GenerateWorldMap`'s pixel-centre formula, `(i - size/2) * pixelSize + pixelSize/2`, and
+  that the big map and minimap shaders read the same three textures.
+- *planned* `ZDOVars.s_TCData` and `TerrainComp`'s save format (`Save` and `Load`: a count, then per point a
+  `bool` flag and, if set, `levelDelta` and `smoothDelta`) read on the server from ZDOs, without loading the zone.
+- *planned* `WorldGenerator.GetBiome`, `WorldGenerator.GetBiomeHeight`: the generated height the edits add to, and
+  where raised Ocean is drawn as Meadows.
+- *planned* Assumes `Heightmap.GetBiomeColor` gives Ocean the same default terrain colour as Meadows (why raised
+  ocean is drawn as Meadows).
+
 ## Prefabs and assets
 
 Not game code, so no script can check these. They come from the game's asset bundles: vanilla prefabs the mod

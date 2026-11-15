@@ -44,6 +44,7 @@ If anything doesn't match, tell Claude what you saw at which step.
 | Terraforming Wand item | Seen in game 4 Nov: crafting card, icon and shape all good; doesn't attack. Stays two-handed like every tool (agreed 4 Nov). No tools on it yet. |
 | Natural ground tool | Designed below. Not started. |
 | Beach tool | Designed below. Waiting on the sand test. |
+| Map follows terrain edits | Designed below (15 Nov). Not started; to be built after V1. |
 
 ### V1 (1.0.0) release checklist
 
@@ -168,6 +169,68 @@ Last edit only, per player. Before applying, copy the current stored height chan
 3. Give the wand a piece table and mode handling.
 4. Natural ground, with preview and undo.
 5. Beach, once sand is understood.
+
+## Map follows terrain edits (later)
+
+Agreed 15 Nov 2026 (Quandru), to be built after V1. **This is a design. None of it is built.**
+
+**The problem.** Quandru raised a large horseshoe of sea east of the Elder into land, around x 3700, z -630. In the
+3D world it's dry, buildable meadow. On the big map and the minimap it's still drawn as sea. It's the same stretch
+that started this mod (see Background).
+
+**Why (Valheim 1.0.21).** `Minimap.GenerateWorldMap` builds the map's three textures from `WorldGenerator`, the land as
+the seed made it, and never reads the real terrain:
+- `m_mapTexture`: one colour per biome (`GetPixelColor`).
+- `m_forestMaskTexture`: forest, plus a blue "ocean" channel wherever the generated height is below 30.
+- `m_heightTexture`: the generated height.
+
+The map shader draws water from the height texture. Each client caches the result in its local world folder
+(`cacheMinimapMask`, `cacheMinimapBiome`, `cacheMinimapHeight`, `cacheMinimapMeta`). `TryLoadMinimapTextureData`
+regenerates it only when the seed or the game version changes. So deleting the cache doesn't help: the map would be
+redrawn the same.
+
+**Where the real heights are.** Every terrain edit is stored per zone in its `TerrainComp` ZDO (`ZDOVars.s_TCData`):
+a 65×65 grid of `m_levelDelta` and `m_smoothDelta` on top of the generated height. Real height is the generated
+height plus `levelDelta` plus `smoothDelta`. We can work that out from the ZDO without loading the terrain, and the
+server holds the ZDO for every zone.
+
+**Design: the server works out the heights, every client draws them.**
+1. **Server:** for each zone with a `TerrainComp`, sample the real height at the map's pixel centres in that zone.
+   Pixel centres follow the same formula as `GenerateWorldMap`: `(index - textureSize/2) * pixelSize + pixelSize/2`.
+   Keep the result per zone.
+2. **On join**, the server sends the client every zone's corrected pixels. **On an edit**, it sends that zone again
+   after a short pause, so a long hoe session doesn't send one message per stroke.
+3. **Client:** writes the heights into `m_heightTexture` and recomputes those pixels in `m_forestMaskTexture`.
+   That's the ocean channel for height under 30 and the forest flag for the biome. Then `Apply()`. The big map and
+   the minimap share the textures, so both update at once.
+4. **Colour of raised ocean: always Meadows** (Quandru, 15 Nov). Where the generator's biome is Ocean and the real
+   height is now above sea level, set `m_mapTexture` to `m_meadowsColor`. Don't use the nearest land biome: the
+   horseshoe borders Plains and Swamp in places, but all of it looks like meadow in game, and that's how it should
+   look on the map.
+   - **Backed by code:** `Heightmap.GetBiomeColor` has no case for Ocean, so Ocean terrain gets the same default
+     vertex colour as Meadows (0,0,0,0) and the ground shader uses meadow textures.
+   - **Still to check in game:** that raised ocean looks like meadow everywhere, including near the borders where
+     vertex colours blend. Compare the redrawn map against the ground along the Plains and Swamp edges of the
+     horseshoe.
+5. **Edits made before the mod**, like the horseshoe, are covered because the server works from the stored ZDOs,
+   not from edit events. There will also be an admin command (e.g. `remap`) to recompute every zone on demand.
+6. **Fog of war is unchanged.** Players still have to explore an area to see it; they just see the right coastline
+   once they have.
+
+**Limits.**
+- **Resolution:** one map pixel covers `m_pixelSize` metres (set in the minimap prefab; read it at runtime), so small
+  hoe edits won't show. Large reclaimed areas will.
+- **Ground dug below sea level** turns to water on the map by the same rule. That's correct.
+- **The game's own biome doesn't change.** Where the generator says Ocean, `WorldGenerator.GetBiomeSector` still says
+  Ocean. The minimap's biome label shows "Ocean" while standing on the horseshoe (seen 15 Nov), and spawns, weather
+  and music stay ocean. Changing that means patching `WorldGenerator.GetBiome` / `GetBiomeSector`, which reaches into
+  many systems. It's a separate decision, not part of this feature.
+
+**Open questions.**
+- Can the corrected pixels be written into the client's cache files, so the map is right before the server's
+  message arrives, or is redrawing on every join simpler and enough?
+- Message size for the whole world on join: send only zones with edits (most have none), compressed.
+- Which settings to add, and where: probably `5 - Map`, with on/off (enforced).
 
 ## Background: how we got here
 
