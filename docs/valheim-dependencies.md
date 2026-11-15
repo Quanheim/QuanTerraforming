@@ -106,6 +106,8 @@ tables so `check-mods.ps1` only checks what the mod really uses.
   `bool` flag and, if set, `levelDelta` and `smoothDelta`) read on the server from ZDOs, without loading the zone.
 - *planned* `WorldGenerator.GetBiome`, `WorldGenerator.GetBiomeHeight`: the generated height the edits add to, and
   where raised Ocean is drawn as Meadows.
+- *planned* Assumes the shader `Custom/mapshader` (material `minimap`) draws water from `_HeightTex` below 30 and the
+  mask's ocean channel, and that trees come from the mask's forest flag (no-forest for raised land).
 - *planned* Assumes `Heightmap.GetBiomeColor` gives Ocean the same default terrain colour as Meadows (why raised
   ocean is drawn as Meadows).
 
